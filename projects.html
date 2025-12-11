@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Oliver Polushkina</title>
+    <meta name="description" content="Explore data science projects by Oliver Polushkina, including biomedical research, statistical analysis, and data visualization work.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #1a2332;
+            --secondary: #c17b5c;
+            --tertiary: #8fa68e;
+            --background: #fafafa;
+            --text: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .project-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .project-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px) rotateX(2deg);
+            box-shadow: 0 20px 40px rgba(26, 35, 50, 0.15);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-gray-800">Oliver Polushkina</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/index.html" class="nav-link text-gray-700 hover:text-gray-900">Home</a>
+                    <a href="/about.html" class="nav-link text-gray-700 hover:text-gray-900">About</a>
+                    <a href="/projects.html" class="nav-link text-gray-700 hover:text-gray-900 font-semibold">Projects</a>
+                    <a href="/contact.html" class="nav-link text-gray-700 hover:text-gray-900">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold text-gray-800 mb-6">My Projects</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                A showcase of data science projects spanning biomedical research, statistical analysis, 
+                and innovative data visualization solutions.
+            </p>
+        </div>
+    </section>
+
+    <!-- Project Filters -->
+    <section class="py-8 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="filter-btn active px-6 py-2 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="all">
+                    All Projects
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="biomedical">
+                    Biomedical Research
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="visualization">
+                    Data Visualization
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="statistical">
+                    Statistical Analysis
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="pipeline">
+                    Analysis Pipelines
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                
+                <!-- Project 1: Biomedical Data Analysis -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="biomedical pipeline">
+                    <img src="./resources/lab-1.jpg" alt="Biomedical Research" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">R</span>
+                            <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Biomedicine</span>
+                            <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Statistics</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Patient Outcome Prediction</h3>
+                        <p class="text-gray-600 mb-4">Developed reproducible analysis pipelines for large patient-level datasets using R, implementing advanced statistical models to predict treatment outcomes.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Institut d'Investigació Biomèdica de Bellvitge</span>
+                            <button class="text-orange-600 hover:text-orange-800 font-semibold" onclick="openModal('project1')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Interactive Dashboards -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="visualization biomedical">
+                    <img src="./resources/data-viz-1.jpg" alt="Data Visualization" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Power BI</span>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">RMarkdown</span>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Clinical Data</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Clinical Research Dashboard</h3>
+                        <p class="text-gray-600 mb-4">Created comprehensive interactive dashboards and automated reporting systems for clinical trial data monitoring and analysis.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">University of Granada</span>
+                            <button class="text-green-600 hover:text-green-800 font-semibold" onclick="openModal('project2')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Multivariate Analysis -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="statistical biomedical">
+                    <img src="./resources/code-screen.jpg" alt="Statistical Modeling" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">MATLAB</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">PCA</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Omics</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Omics Data Integration</h3>
+                        <p class="text-gray-600 mb-4">Applied multivariate analysis methods including ASCA and PCA for comprehensive omics data processing and biological interpretation.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">University of Granada</span>
+                            <button class="text-blue-600 hover:text-blue-800 font-semibold" onclick="openModal('project3')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Reproducible Research -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="pipeline statistical">
+                    <img src="./resources/workspace.jpg" alt="Reproducible Research" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">R</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Quarto</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Git</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Reproducible Research Framework</h3>
+                        <p class="text-gray-600 mb-4">Established comprehensive frameworks for reproducible statistical analysis using R, Quarto, and version control systems.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Personal Research</span>
+                            <button class="text-purple-600 hover:text-purple-800 font-semibold" onclick="openModal('project4')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5: Statistical Modeling -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="statistical biomedical">
+                    <img src="./resources/lab-1.jpg" alt="Statistical Modeling" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">R</span>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Mixed Models</span>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Clinical</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Mixed-Effects Modeling</h3>
+                        <p class="text-gray-600 mb-4">Developed sophisticated mixed-effects models for longitudinal clinical data analysis, accounting for patient-specific variations.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Institut d'Investigació Biomèdica de Bellvitge</span>
+                            <button class="text-red-600 hover:text-red-800 font-semibold" onclick="openModal('project5')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6: Data Pipeline Automation -->
+                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden" data-category="pipeline visualization">
+                    <img src="./resources/data-viz-1.jpg" alt="Data Pipeline" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">Python</span>
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">SQL</span>
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">ETL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Automated Data Processing</h3>
+                        <p class="text-gray-600 mb-4">Built automated ETL pipelines for processing large-scale biomedical datasets with quality checks and validation protocols.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">University of Granada</span>
+                            <button class="text-indigo-600 hover:text-indigo-800 font-semibold" onclick="openModal('project6')">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modals -->
+    <div id="project1-modal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Patient Outcome Prediction</h2>
+                <button onclick="closeModal('project1')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div class="space-y-6">
+                <img src="./resources/lab-1.jpg" alt="Project Image" class="w-full h-64 object-cover rounded-lg">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Project Overview</h3>
+                    <p class="text-gray-600 mb-4">
+                        This project involved developing predictive models for patient treatment outcomes using large-scale clinical datasets. 
+                        The goal was to identify key factors influencing treatment success and provide actionable insights for clinical decision-making.
+                    </p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Technical Implementation</h3>
+                    <ul class="list-disc list-inside text-gray-600 mb-4">
+                        <li>Built reproducible analysis pipelines using R and RMarkdown</li>
+                        <li>Implemented multiple machine learning algorithms including logistic regression, random forests, and gradient boosting</li>
+                        <li>Conducted extensive feature engineering and selection processes</li>
+                        <li>Performed cross-validation and model performance evaluation</li>
+                        <li>Created comprehensive visualizations and interactive reports</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Key Results</h3>
+                    <p class="text-gray-600">
+                        Achieved 85% prediction accuracy with clear identification of the most influential factors affecting patient outcomes. 
+                        The models are now being used to support clinical decision-making processes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="project2-modal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Clinical Research Dashboard</h2>
+                <button onclick="closeModal('project2')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div class="space-y-6">
+                <img src="./resources/data-viz-1.jpg" alt="Project Image" class="w-full h-64 object-cover rounded-lg">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Project Overview</h3>
+                    <p class="text-gray-600 mb-4">
+                        Developed an interactive dashboard system for monitoring clinical trial progress and analyzing research data. 
+                        The system provides real-time insights and automated reporting capabilities for research teams.
+                    </p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Technical Implementation</h3>
+                    <ul class="list-disc list-inside text-gray-600 mb-4">
+                        <li>Designed interactive Power BI dashboards with drill-down capabilities</li>
+                        <li>Implemented automated data refresh and validation processes</li>
+                        <li>Created RMarkdown templates for standardized reporting</li>
+                        <li>Integrated multiple data sources including clinical databases and laboratory results</li>
+                        <li>Developed user authentication and role-based access controls</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Key Results</h3>
+                    <p class="text-gray-600">
+                        Reduced reporting time by 70% and improved data quality through automated validation. 
+                        The dashboard is now used by over 50 researchers across multiple clinical trials.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional modals would follow the same pattern -->
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gray-800">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-4">Interested in Collaborating?</h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Let's discuss how we can work together on your next data science project
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/contact.html" class="bg-white text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Get In Touch
+                </a>
+                <a href="/about.html" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-colors">
+                    Learn More About Me
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="mb-4">
+                <p class="text-gray-400">© 2025 Oliver Polushkina. All rights reserved.</p>
+            </div>
+            <div class="flex justify-center space-x-6">
+                <a href="mailto:oliverpm327@gmail.com" class="text-gray-400 hover:text-white transition-colors">
+                    Email
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Project filtering functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            // Filter functionality
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter projects
+                    projectCards.forEach(card => {
+                        const categories = card.getAttribute('data-category');
+                        
+                        if (filter === 'all' || categories.includes(filter)) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.classList.add('show');
+                            }, 100);
+                        } else {
+                            card.classList.remove('show');
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+            
+            // Initial animation
+            setTimeout(() => {
+                projectCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('show');
+                    }, index * 100);
+                });
+            }, 200);
+        });
+        
+        // Modal functionality
+        function openModal(projectId) {
+            const modal = document.getElementById(projectId + '-modal');
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeModal(projectId) {
+            const modal = document.getElementById(projectId + '-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const openModal = document.querySelector('.modal.show');
+                if (openModal) {
+                    openModal.classList.remove('show');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
